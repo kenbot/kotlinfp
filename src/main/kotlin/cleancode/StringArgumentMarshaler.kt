@@ -4,10 +4,9 @@ import cleancode.ArgsException.ErrorCode.MISSING_STRING
 
 
 class StringArgumentMarshaler : ArgumentMarshaler {
-    private var stringValue: String? = ""
+    private var stringValue: String = ""
 
-    @Throws(ArgsException::class)
-    override fun set(currentArgument: Iterator<String?>?) {
+    override fun set(currentArgument: Iterator<String>?) {
         stringValue = try {
             currentArgument!!.next()
         } catch (e: NoSuchElementException) {
@@ -17,7 +16,7 @@ class StringArgumentMarshaler : ArgumentMarshaler {
 
     companion object {
         fun getValue(am: ArgumentMarshaler?): String {
-            return if (am != null && am is StringArgumentMarshaler) (am.stringValue ?: "") else ""
+            return if (am != null && am is StringArgumentMarshaler) am.stringValue else ""
         }
     }
 }

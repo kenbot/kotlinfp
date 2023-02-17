@@ -2,5 +2,5 @@ package cleancode
 
 
 interface ArgumentMarshaler {
-    fun set(currentArgument: Iterator<String?>?)
+    fun set(currentArgument: Iterator<String>?)
 }

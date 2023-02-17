@@ -24,7 +24,7 @@ sealed interface Attempt<out A> {
         }
 
         override fun toString(): String = "Failure"
-        override fun equals(o: Any?): Boolean = o == this
+        override fun equals(other: Any?): Boolean = other == this
     }
 }
 

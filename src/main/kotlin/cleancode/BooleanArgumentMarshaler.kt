@@ -4,7 +4,7 @@ package cleancode
 class BooleanArgumentMarshaler : ArgumentMarshaler {
     private var booleanValue = false
 
-    override fun set(currentArgument: Iterator<String?>?) {
+    override fun set(currentArgument: Iterator<String>?) {
         booleanValue = true
     }
 

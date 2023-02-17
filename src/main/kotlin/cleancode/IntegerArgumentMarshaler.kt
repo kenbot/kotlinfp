@@ -6,7 +6,7 @@ import cleancode.ArgsException.ErrorCode.*
 class IntegerArgumentMarshaler : ArgumentMarshaler {
     private var intValue = 0
 
-    override fun set(currentArgument: Iterator<String?>?) {
+    override fun set(currentArgument: Iterator<String>?) {
         var parameter: String? = null
         try {
             parameter = currentArgument!!.next()

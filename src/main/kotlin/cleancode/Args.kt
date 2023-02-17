@@ -16,13 +16,11 @@ class Args(schema: String, args: Array<String?>) {
         parseArgumentStrings(Arrays.asList(*args))
     }
 
-    @Throws(ArgsException::class)
     private fun parseSchema(schema: String) {
         for (element in schema.split(",".toRegex()).dropLastWhile { it.isEmpty() }
             .toTypedArray()) if (element.length > 0) parseSchemaElement(element.trim { it <= ' ' })
     }
 
-    @Throws(ArgsException::class)
     private fun parseSchemaElement(element: String) {
         val elementId = element[0]
         val elementTail = element.substring(1)
@@ -36,12 +34,10 @@ class Args(schema: String, args: Array<String?>) {
             MapArgumentMarshaler() else throw ArgsException(INVALID_ARGUMENT_FORMAT, elementId, elementTail)
     }
 
-    @Throws(ArgsException::class)
     private fun validateSchemaElementId(elementId: Char) {
         if (!Character.isLetter(elementId)) throw ArgsException(INVALID_ARGUMENT_NAME, elementId, null)
     }
 
-    @Throws(ArgsException::class)
     private fun parseArgumentStrings(argsList: MutableList<String>) {
         currentArgument = argsList.listIterator()
         while (currentArgument!!.hasNext()) {
@@ -55,13 +51,11 @@ class Args(schema: String, args: Array<String?>) {
         }
     }
 
-    @Throws(ArgsException::class)
     private fun parseArgumentCharacters(argChars: String) {
         for (element in argChars)
             parseArgumentCharacter(element)
     }
 
-    @Throws(ArgsException::class)
     private fun parseArgumentCharacter(argChar: Char) {
         val m: ArgumentMarshaler? = marshalers[argChar]
         if (m == null) {
@@ -101,7 +95,7 @@ class Args(schema: String, args: Array<String?>) {
         return DoubleArgumentMarshaler.getValue(marshalers[arg])
     }
 
-    fun getStringArray(arg: Char): Array<String?> {
+    fun getStringArray(arg: Char): Array<String> {
         return StringArrayArgumentMarshaler.getValue(marshalers[arg])
     }
 

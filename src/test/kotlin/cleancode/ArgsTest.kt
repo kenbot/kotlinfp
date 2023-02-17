@@ -157,7 +157,7 @@ class ArgsTest {
     fun testStringArray() {
         val args = Args("x[*]", arrayOf("-x", "alpha"))
         assertTrue(args.has('x'))
-        val result: Array<String?> = args.getStringArray('x')
+        val result: Array<String> = args.getStringArray('x')
         assertEquals(1, result.size)
         assertEquals("alpha", result[0])
     }
@@ -177,7 +177,7 @@ class ArgsTest {
     fun manyStringArrayElements() {
         val args = Args("x[*]", arrayOf("-x", "alpha", "-x", "beta", "-x", "gamma"))
         assertTrue(args.has('x'))
-        val result: Array<String?> = args.getStringArray('x')
+        val result: Array<String> = args.getStringArray('x')
         assertEquals(3, result.size)
         assertEquals("alpha", result[0])
         assertEquals("beta", result[1])

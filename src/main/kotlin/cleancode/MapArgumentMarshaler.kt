@@ -6,9 +6,9 @@ import cleancode.ArgsException.ErrorCode.*
 class MapArgumentMarshaler : ArgumentMarshaler {
     private val map: MutableMap<String, String> = HashMap()
 
-    override fun set(currentArgument: Iterator<String?>?) {
+    override fun set(currentArgument: Iterator<String>?) {
         try {
-            val mapEntries = currentArgument!!.next()!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }
+            val mapEntries = currentArgument!!.next().split(",".toRegex()).dropLastWhile { it.isEmpty() }
                 .toTypedArray()
             for (entry in mapEntries) {
                 val entryComponents = entry.split(":".toRegex()).dropLastWhile { it.isEmpty() }

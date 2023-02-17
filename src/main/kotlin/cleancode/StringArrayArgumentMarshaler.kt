@@ -4,10 +4,9 @@ import cleancode.ArgsException.ErrorCode.*
 
 
 class StringArrayArgumentMarshaler : ArgumentMarshaler {
-    private val strings: MutableList<String?> = ArrayList()
+    private val strings: MutableList<String> = ArrayList()
 
-    @Throws(ArgsException::class)
-    override fun set(currentArgument: Iterator<String?>?) {
+    override fun set(currentArgument: Iterator<String>?) {
         try {
             strings.add(currentArgument!!.next())
         } catch (e: NoSuchElementException) {
@@ -16,8 +15,8 @@ class StringArrayArgumentMarshaler : ArgumentMarshaler {
     }
 
     companion object {
-        fun getValue(am: ArgumentMarshaler?): Array<String?> {
-            return if (am != null && am is StringArrayArgumentMarshaler) am.strings.toTypedArray() else arrayOfNulls(0)
+        fun getValue(am: ArgumentMarshaler?): Array<String> {
+            return if (am != null && am is StringArrayArgumentMarshaler) am.strings.toTypedArray() else arrayOf()
         }
     }
 }

@@ -6,8 +6,7 @@ import cleancode.ArgsException.ErrorCode.*
 class DoubleArgumentMarshaler : ArgumentMarshaler {
     private var doubleValue = 0.0
 
-    @Throws(ArgsException::class)
-    override fun set(currentArgument: Iterator<String?>?) {
+    override fun set(currentArgument: Iterator<String>?) {
         var parameter: String? = null
         try {
             parameter = currentArgument!!.next()
