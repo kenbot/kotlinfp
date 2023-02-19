@@ -3,29 +3,6 @@ package compositionalcode
 import compositionalcode.ArgsException.ErrorCode.*
 import java.util.*
 
-
-
-
-enum class ArgumentType {
-    INTEGER,
-    STRING,
-    DOUBLE,
-    BOOLEAN,
-    STRING_ARRAY,
-    MAP;
-
-    fun createArgumentMarshaler(): ArgumentMarshaler =
-        when (this) {
-            INTEGER -> IntegerArgumentMarshaler()
-            STRING -> StringArgumentMarshaler()
-            DOUBLE -> DoubleArgumentMarshaler()
-            BOOLEAN -> BooleanArgumentMarshaler()
-            STRING_ARRAY -> StringArrayArgumentMarshaler()
-            MAP -> MapArgumentMarshaler()
-        }
-}
-
-
 class Args(schema: Schema, args: Array<String?>) {
     private val marshalers: Map<Char, ArgumentMarshaler> =
         schema.argumentMap.mapValues {
