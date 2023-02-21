@@ -10,8 +10,6 @@ class Args(private val schema: Schema, args: Array<String?>) {
             it.value.createArgumentMarshaler()
         }
 
-    private val argsFound: MutableSet<Char> = HashSet()
-
     private val argumentValues: Map<Char, Any>
 
     private var currentArgument: ListIterator<String>? = null
@@ -51,7 +49,6 @@ class Args(private val schema: Schema, args: Array<String?>) {
         if (m == null) {
             throw ArgsException(UNEXPECTED_ARGUMENT, argChar, null)
         } else {
-            argsFound.add(argChar) // CORE EFFECT!!!!!!
             try {
                 return m.extract(currentArgument) // CORE EFFECT!!!!!!
             } catch (e: ArgsException) {
@@ -62,7 +59,7 @@ class Args(private val schema: Schema, args: Array<String?>) {
     }
 
     fun has(arg: Char): Boolean {
-        return argsFound.contains(arg)
+        return argumentValues.containsKey(arg)
     }
 
     fun nextArgument(): Int {
