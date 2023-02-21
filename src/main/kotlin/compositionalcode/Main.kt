@@ -2,7 +2,7 @@ package compositionalcode
 
 fun main(args: Array<String>) {
     try {
-        val arg = Args("l,p#,d*,x[*]", args as Array<String?>)
+        val arg = Args("l,p#,d*,x[*]", args)
         val logging: Boolean = arg.getBoolean('l')
         val port: Int = arg.getInt('p')!!
         val directory: String = arg.getString('d')!!

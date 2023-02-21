@@ -10,10 +10,10 @@ enum class ArgumentType {
 
     fun createArgumentMarshaler(): ArgumentMarshaler =
         when (this) {
-            INTEGER -> IntegerArgumentMarshaler()
-            STRING -> StringArgumentMarshaler()
-            DOUBLE -> DoubleArgumentMarshaler()
-            BOOLEAN -> BooleanArgumentMarshaler()
-            STRING_ARRAY -> StringArrayArgumentMarshaler()
+            INTEGER -> IntegerArgumentMarshaler
+            STRING -> StringArgumentMarshaler
+            DOUBLE -> DoubleArgumentMarshaler
+            BOOLEAN -> BooleanArgumentMarshaler
+            STRING_ARRAY -> StringArrayArgumentMarshaler
         }
 }

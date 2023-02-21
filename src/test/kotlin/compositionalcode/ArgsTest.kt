@@ -9,7 +9,7 @@ class ArgsTest {
 
     @Test
     fun testCreateWithNoSchemaOrArguments() {
-        val args = Args("", arrayOfNulls(0))
+        val args = Args("", emptyArray())
         assertEquals(0, args.nextArgument())
     }
 

@@ -1,69 +1,67 @@
 package compositionalcode
 
 import compositionalcode.ArgsException.ErrorCode.*
-import java.util.*
-import kotlin.collections.HashSet
 
-class Args(private val schema: Schema, args: Array<String?>) {
-    private val marshalers: Map<Char, ArgumentMarshaler> =
-        schema.argumentMap.mapValues {
-            it.value.createArgumentMarshaler()
-        }
+
+class Args(private val schema: Schema, args: Array<String>) {
 
     private val argumentValues: Map<Char, Any>
-
-    private var currentArgument: ListIterator<String>? = null
+    private val nextArgument: Int
 
     init {
-        argumentValues = parseArgumentStrings(Arrays.asList(*args))
+        val (argumentValues, nextArgument) = parseArgumentStrings(listOf(*args))
+        this.argumentValues = argumentValues
+        this.nextArgument = nextArgument
     }
 
-    constructor(schemaDsl: String, args: Array<String?>): this(Schema.parseFromDsl(schemaDsl), args)
+    constructor(schemaDsl: String, args: Array<String>): this(Schema.parseFromDsl(schemaDsl), args)
 
-    private fun parseArgumentStrings(argsList: MutableList<String>): Map<Char, Any> {
-        currentArgument = argsList.listIterator()
+    private fun parseArgumentStrings(argsList: List<String>): Pair<Map<Char, Any>, Int> {
+        val currentArgument: ListIterator<String> = argsList.listIterator()
+        val argumentValuesSoFar: MutableMap<Char, Any> = mutableMapOf()
 
-        return buildMap {
-            while (currentArgument!!.hasNext()) {
-                val argString = currentArgument!!.next()
-                if (argString.startsWith("-")) {
-                    val argMap = parseArgumentCharacters(argString.substring(1))
-                    putAll(argMap)
-                } else {
-                    currentArgument!!.previous()
-                    break
+        fun parseArgumentCharacter(argChar: Char): Any {
+            val m: ArgumentMarshaler? = schema.argumentMap[argChar]?.createArgumentMarshaler()
+            if (m == null) {
+                throw ArgsException(UNEXPECTED_ARGUMENT, argChar, null)
+            } else {
+                try {
+                    val existingValue: Any? = argumentValuesSoFar[argChar]
+                    return m.extract(currentArgument, existingValue)
+                } catch (e: ArgsException) {
+                    e.errorArgumentId = argChar
+                    throw e
                 }
             }
         }
-    }
 
-    private fun parseArgumentCharacters(argChars: String): Map<Char, Any> {
-        return buildMap {
-            for (element in argChars)
-                put(element, parseArgumentCharacter(element))
-        }
-    }
-
-    private fun parseArgumentCharacter(argChar: Char): Any {
-        val m: ArgumentMarshaler? = marshalers[argChar]
-        if (m == null) {
-            throw ArgsException(UNEXPECTED_ARGUMENT, argChar, null)
-        } else {
-            try {
-                return m.extract(currentArgument) // CORE EFFECT!!!!!!
-            } catch (e: ArgsException) {
-                e.errorArgumentId = argChar
-                throw e
+        fun parseArgumentCharacters(argChars: String) {
+            for (element in argChars) {
+                argumentValuesSoFar[element] = parseArgumentCharacter(element)
             }
         }
+
+        while (currentArgument.hasNext()) {
+            val argString = currentArgument.next()
+            if (argString.startsWith("-")) {
+                parseArgumentCharacters(argString.substring(1))
+            } else {
+                currentArgument.previous()
+                break
+            }
+        }
+
+        return Pair(buildMap { putAll(argumentValuesSoFar) }, currentArgument.nextIndex())
     }
+
+
 
     fun has(arg: Char): Boolean {
         return argumentValues.containsKey(arg)
     }
 
     fun nextArgument(): Int {
-        return currentArgument!!.nextIndex()
+        return nextArgument;
     }
 
     fun getBoolean(arg: Char): Boolean {
@@ -83,6 +81,6 @@ class Args(private val schema: Schema, args: Array<String?>) {
     }
 
     fun getStringArray(arg: Char): Array<String>? {
-        return StringArrayArgumentMarshaler.cast(argumentValues[arg])
+        return StringArrayArgumentMarshaler.cast(argumentValues[arg])?.toTypedArray()
     }
 }
