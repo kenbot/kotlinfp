@@ -17,8 +17,9 @@ class Args(schema: String, args: Array<String?>) {
     }
 
     private fun parseSchema(schema: String) {
-        for (element in schema.split(",".toRegex()).dropLastWhile { it.isEmpty() }
-            .toTypedArray()) if (element.length > 0) parseSchemaElement(element.trim { it <= ' ' })
+        for (element in schema.split(","))
+            if (element.length > 0)
+                parseSchemaElement(element.trim())
     }
 
     private fun parseSchemaElement(element: String) {

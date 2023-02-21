@@ -8,11 +8,9 @@ class MapArgumentMarshaler : ArgumentMarshaler {
 
     override fun set(currentArgument: Iterator<String>?) {
         try {
-            val mapEntries = currentArgument!!.next().split(",".toRegex()).dropLastWhile { it.isEmpty() }
-                .toTypedArray()
+            val mapEntries = currentArgument!!.next().split(",")
             for (entry in mapEntries) {
-                val entryComponents = entry.split(":".toRegex()).dropLastWhile { it.isEmpty() }
-                    .toTypedArray()
+                val entryComponents = entry.split(":")
                 if (entryComponents.size != 2) throw ArgsException(MALFORMED_MAP)
                 map[entryComponents[0]] = entryComponents[1]
             }
