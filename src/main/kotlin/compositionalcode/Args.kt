@@ -2,8 +2,9 @@ package compositionalcode
 
 import compositionalcode.ArgsException.ErrorCode.*
 import java.util.*
+import kotlin.collections.HashSet
 
-class Args(schema: Schema, args: Array<String?>) {
+class Args(private val schema: Schema, args: Array<String?>) {
     private val marshalers: Map<Char, ArgumentMarshaler> =
         schema.argumentMap.mapValues {
             it.value.createArgumentMarshaler()
@@ -11,41 +12,48 @@ class Args(schema: Schema, args: Array<String?>) {
 
     private val argsFound: MutableSet<Char> = HashSet()
 
+    private val argumentValues: Map<Char, Any>
+
     private var currentArgument: ListIterator<String>? = null
 
     init {
-        parseArgumentStrings(Arrays.asList(*args))
+        argumentValues = parseArgumentStrings(Arrays.asList(*args))
     }
 
     constructor(schemaDsl: String, args: Array<String?>): this(Schema.parseFromDsl(schemaDsl), args)
 
-
-    private fun parseArgumentStrings(argsList: MutableList<String>) {
+    private fun parseArgumentStrings(argsList: MutableList<String>): Map<Char, Any> {
         currentArgument = argsList.listIterator()
-        while (currentArgument!!.hasNext()) {
-            val argString = currentArgument!!.next()
-            if (argString.startsWith("-")) {
-                parseArgumentCharacters(argString.substring(1))
-            } else {
-                currentArgument!!.previous()
-                break
+
+        return buildMap {
+            while (currentArgument!!.hasNext()) {
+                val argString = currentArgument!!.next()
+                if (argString.startsWith("-")) {
+                    val argMap = parseArgumentCharacters(argString.substring(1))
+                    putAll(argMap)
+                } else {
+                    currentArgument!!.previous()
+                    break
+                }
             }
         }
     }
 
-    private fun parseArgumentCharacters(argChars: String) {
-        for (element in argChars)
-            parseArgumentCharacter(element)
+    private fun parseArgumentCharacters(argChars: String): Map<Char, Any> {
+        return buildMap {
+            for (element in argChars)
+                put(element, parseArgumentCharacter(element))
+        }
     }
 
-    private fun parseArgumentCharacter(argChar: Char) {
+    private fun parseArgumentCharacter(argChar: Char): Any {
         val m: ArgumentMarshaler? = marshalers[argChar]
         if (m == null) {
             throw ArgsException(UNEXPECTED_ARGUMENT, argChar, null)
         } else {
             argsFound.add(argChar) // CORE EFFECT!!!!!!
             try {
-                m.set(currentArgument) // CORE EFFECT!!!!!!
+                return m.extract(currentArgument) // CORE EFFECT!!!!!!
             } catch (e: ArgsException) {
                 e.errorArgumentId = argChar
                 throw e
@@ -62,22 +70,22 @@ class Args(schema: Schema, args: Array<String?>) {
     }
 
     fun getBoolean(arg: Char): Boolean {
-        return BooleanArgumentMarshaler.getValue(marshalers[arg])
+        return BooleanArgumentMarshaler.cast(argumentValues[arg])
     }
 
-    fun getString(arg: Char): String {
-        return StringArgumentMarshaler.getValue(marshalers[arg])
+    fun getString(arg: Char): String? {
+        return StringArgumentMarshaler.cast(argumentValues[arg])
     }
 
-    fun getInt(arg: Char): Int {
-        return IntegerArgumentMarshaler.getValue(marshalers[arg])
+    fun getInt(arg: Char): Int? {
+        return IntegerArgumentMarshaler.cast(argumentValues[arg])
     }
 
-    fun getDouble(arg: Char): Double {
-        return DoubleArgumentMarshaler.getValue(marshalers[arg])
+    fun getDouble(arg: Char): Double? {
+        return DoubleArgumentMarshaler.cast(argumentValues[arg])
     }
 
-    fun getStringArray(arg: Char): Array<String> {
-        return StringArrayArgumentMarshaler.getValue(marshalers[arg])
+    fun getStringArray(arg: Char): Array<String>? {
+        return StringArrayArgumentMarshaler.cast(argumentValues[arg])
     }
 }

@@ -127,7 +127,7 @@ class ArgsTest {
     fun testSimpleDoublePresent() {
         val args = Args("x##", arrayOf("-x", "42.3"))
         assertTrue(args.has('x'))
-        assertEquals(42.3, args.getDouble('x'), .001)
+        assertEquals(42.3, args.getDouble('x')!!, .001)
     }
 
     @Test
@@ -157,9 +157,9 @@ class ArgsTest {
     fun testStringArray() {
         val args = Args("x[*]", arrayOf("-x", "alpha"))
         assertTrue(args.has('x'))
-        val result: Array<String> = args.getStringArray('x')
-        assertEquals(1, result.size)
-        assertEquals("alpha", result[0])
+        val result: Array<String>? = args.getStringArray('x')
+        assertEquals(1, result?.size)
+        assertEquals("alpha", result?.get(0))
     }
 
     @Test
@@ -177,7 +177,7 @@ class ArgsTest {
     fun manyStringArrayElements() {
         val args = Args("x[*]", arrayOf("-x", "alpha", "-x", "beta", "-x", "gamma"))
         assertTrue(args.has('x'))
-        val result: Array<String> = args.getStringArray('x')
+        val result: Array<String> = args.getStringArray('x')!!
         assertEquals(3, result.size)
         assertEquals("alpha", result[0])
         assertEquals("beta", result[1])

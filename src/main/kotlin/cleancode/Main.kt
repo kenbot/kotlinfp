@@ -13,6 +13,6 @@ fun main(args: Array<String>) {
 }
 
 fun executeApplication(logging: Boolean, port: Int, directory: String) {
-    println("Executing application with logging=$logging, port=$port, directory=$directory...")
+    println("Executing cleancode application with logging=$logging, port=$port, directory=$directory...")
 }
 

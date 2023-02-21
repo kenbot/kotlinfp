@@ -2,5 +2,5 @@ package compositionalcode
 
 
 interface ArgumentMarshaler {
-    fun set(currentArgument: Iterator<String>?)
+    fun extract(currentArgument: Iterator<String>?): Any
 }

@@ -1,5 +1,6 @@
 package compositionalcode
 
+
 enum class ArgumentType {
     INTEGER,
     STRING,
