@@ -24,13 +24,14 @@ data class Schema(val argumentMap: Map<Char, ArgumentType>) {
             validateSchemaElementId(elementId)
 
             val argType: ArgumentType =
-                if (elementTail.isEmpty()) ArgumentType.BOOLEAN
-                else if (elementTail == "*") ArgumentType.STRING
-                else if (elementTail == "#") ArgumentType.INTEGER
-                else if (elementTail == "##") ArgumentType.DOUBLE
-                else if (elementTail == "[*]") ArgumentType.STRING_ARRAY
-                else if (elementTail == "&") ArgumentType.MAP
-                else throw ArgsException(ArgsException.ErrorCode.INVALID_ARGUMENT_FORMAT, elementId, elementTail)
+                when (elementTail) {
+                    "" -> ArgumentType.BOOLEAN
+                    "*" -> ArgumentType.STRING
+                    "#" -> ArgumentType.INTEGER
+                    "##" -> ArgumentType.DOUBLE
+                    "[*]" -> ArgumentType.STRING_ARRAY
+                    else -> throw ArgsException(ArgsException.ErrorCode.INVALID_ARGUMENT_FORMAT, elementId, elementTail)
+                }
 
             return Pair(elementId, argType)
         }

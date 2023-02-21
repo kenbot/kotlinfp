@@ -1,6 +1,7 @@
 package cleancode
 
 import cleancode.ArgsException.ErrorCode.*
+import compositionalcode.ArgumentType
 import java.util.*
 
 
@@ -26,13 +27,18 @@ class Args(schema: String, args: Array<String?>) {
         val elementId = element[0]
         val elementTail = element.substring(1)
         validateSchemaElementId(elementId)
-        if (elementTail.length == 0) marshalers[elementId] =
-            BooleanArgumentMarshaler() else if (elementTail == "*") marshalers[elementId] =
-            StringArgumentMarshaler() else if (elementTail == "#") marshalers[elementId] =
-            IntegerArgumentMarshaler() else if (elementTail == "##") marshalers[elementId] =
-            DoubleArgumentMarshaler() else if (elementTail == "[*]") marshalers[elementId] =
-            StringArrayArgumentMarshaler() else if (elementTail == "&") marshalers[elementId] =
-            MapArgumentMarshaler() else throw ArgsException(INVALID_ARGUMENT_FORMAT, elementId, elementTail)
+
+        val marshaler: ArgumentMarshaler =
+            when (elementTail) {
+                "" -> BooleanArgumentMarshaler()
+                "*" -> StringArgumentMarshaler()
+                "#" -> IntegerArgumentMarshaler()
+                "##" -> DoubleArgumentMarshaler()
+                "[*]" -> StringArrayArgumentMarshaler()
+                else -> throw ArgsException(INVALID_ARGUMENT_FORMAT, elementId, elementTail)
+            }
+
+        marshalers[elementId] = marshaler
     }
 
     private fun validateSchemaElementId(elementId: Char) {
@@ -98,9 +104,5 @@ class Args(schema: String, args: Array<String?>) {
 
     fun getStringArray(arg: Char): Array<String> {
         return StringArrayArgumentMarshaler.getValue(marshalers[arg])
-    }
-
-    fun getMap(arg: Char): Map<String, String> {
-        return MapArgumentMarshaler.getValue(marshalers[arg])
     }
 }

@@ -5,8 +5,7 @@ enum class ArgumentType {
     STRING,
     DOUBLE,
     BOOLEAN,
-    STRING_ARRAY,
-    MAP;
+    STRING_ARRAY;
 
     fun createArgumentMarshaler(): ArgumentMarshaler =
         when (this) {
@@ -15,6 +14,5 @@ enum class ArgumentType {
             DOUBLE -> DoubleArgumentMarshaler()
             BOOLEAN -> BooleanArgumentMarshaler()
             STRING_ARRAY -> StringArrayArgumentMarshaler()
-            MAP -> MapArgumentMarshaler()
         }
 }

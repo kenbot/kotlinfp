@@ -10,7 +10,7 @@ class IntegerArgumentMarshaler : ArgumentMarshaler {
         var parameter: String? = null
         try {
             parameter = currentArgument!!.next()
-            intValue = parameter!!.toInt()
+            intValue = parameter.toInt()
         } catch (e: NoSuchElementException) {
             throw ArgsException(MISSING_INTEGER)
         } catch (e: NumberFormatException) {

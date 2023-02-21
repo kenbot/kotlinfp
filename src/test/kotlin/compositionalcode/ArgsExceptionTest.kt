@@ -43,18 +43,6 @@ class ArgsExceptionTest {
     }
 
     @Test
-    fun testMissingMapMessage() {
-        val e = ArgsException(MISSING_MAP, 'x', null)
-        assertEquals("Could not find map string for -x.", e.errorMessage())
-    }
-
-    @Test
-    fun testMalformedMapMessage() {
-        val e = ArgsException(MALFORMED_MAP, 'x', null)
-        assertEquals("Map string for -x is not of form k1:v1,k2:v2...", e.errorMessage())
-    }
-
-    @Test
     fun testInvalidArgumentName() {
         val e = ArgsException(INVALID_ARGUMENT_NAME, '#', null)
         assertEquals("'#' is not a valid argument name.", e.errorMessage())

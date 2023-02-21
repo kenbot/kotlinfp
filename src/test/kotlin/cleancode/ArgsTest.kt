@@ -185,29 +185,6 @@ class ArgsTest {
     }
 
     @Test
-    fun MapArgument() {
-        val args = Args("f&", arrayOf("-f", "key1:val1,key2:val2"))
-        assertTrue(args.has('f'))
-        val map: Map<String, String> = args.getMap('f')
-        assertEquals("val1", map["key1"])
-        assertEquals("val2", map["key2"])
-    }
-
-    fun malFormedMapArgument() {
-        assertThrows<ArgsException>(ArgsException::class.java) {
-            Args("f&", arrayOf("-f", "key1:val1,key2"))
-        }
-    }
-
-    @Test
-    fun oneMapArgument() {
-        val args = Args("f&", arrayOf("-f", "key1:val1"))
-        assertTrue(args.has('f'))
-        val map: Map<String, String> = args.getMap('f')
-        assertEquals("val1", map["key1"])
-    }
-
-    @Test
     fun testExtraArguments() {
         val args = Args("x,y*", arrayOf("-x", "-y", "alpha", "beta"))
         assertTrue(args.getBoolean('x'))

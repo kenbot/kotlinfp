@@ -10,7 +10,7 @@ class DoubleArgumentMarshaler : ArgumentMarshaler {
         var parameter: String? = null
         try {
             parameter = currentArgument!!.next()
-            doubleValue = parameter!!.toDouble()
+            doubleValue = parameter.toDouble()
         } catch (e: NoSuchElementException) {
             throw ArgsException(MISSING_DOUBLE)
         } catch (e: NumberFormatException) {

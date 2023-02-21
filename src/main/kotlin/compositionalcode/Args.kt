@@ -80,8 +80,4 @@ class Args(schema: Schema, args: Array<String?>) {
     fun getStringArray(arg: Char): Array<String> {
         return StringArrayArgumentMarshaler.getValue(marshalers[arg])
     }
-
-    fun getMap(arg: Char): Map<String, String> {
-        return MapArgumentMarshaler.getValue(marshalers[arg])
-    }
 }

@@ -13,7 +13,5 @@ object Empty : ConsList<Nothing> {
     override fun toString(): String = "Empty"
 }
 
-fun <A> consListOf(vararg items: A): ConsList<A> = TODO()
-
 infix fun <A> A.cons(tail: ConsList<A>): ConsList<A> =
     Cons(this, tail)
