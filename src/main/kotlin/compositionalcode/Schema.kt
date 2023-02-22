@@ -25,11 +25,11 @@ data class Schema(val argumentMap: Map<Char, ArgumentType>) {
 
             val argType: ArgumentType =
                 when (elementTail) {
-                    "" -> ArgumentType.BOOLEAN
-                    "*" -> ArgumentType.STRING
-                    "#" -> ArgumentType.INTEGER
-                    "##" -> ArgumentType.DOUBLE
-                    "[*]" -> ArgumentType.STRING_ARRAY
+                    "" -> BooleanArgumentType
+                    "*" -> StringArgumentType
+                    "#" -> IntegerArgumentType
+                    "##" -> DoubleArgumentType
+                    "[*]" -> StringArrayArgumentType
                     else -> throw ArgsException(ArgsException.ErrorCode.INVALID_ARGUMENT_FORMAT, elementId, elementTail)
                 }
 

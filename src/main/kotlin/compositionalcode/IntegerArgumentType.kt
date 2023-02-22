@@ -3,8 +3,8 @@ package compositionalcode
 import compositionalcode.ArgsException.ErrorCode.*
 
 
-object IntegerArgumentMarshaler : ArgumentMarshaler {
-    override fun extract(currentArgument: Iterator<String>, existing: Any?): Int {
+object IntegerArgumentType : ArgumentType {
+    override fun parseArgumentValue(currentArgument: Iterator<String>, existing: Any?): Int {
         var parameter: String? = null
         try {
             parameter = currentArgument.next()

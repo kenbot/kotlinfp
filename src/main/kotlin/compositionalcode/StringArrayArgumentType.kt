@@ -3,8 +3,8 @@ package compositionalcode
 import compositionalcode.ArgsException.ErrorCode.*
 
 
-object StringArrayArgumentMarshaler : ArgumentMarshaler {
-    override fun extract(currentArgument: Iterator<String>, existing: Any?): List<String> {
+object StringArrayArgumentType : ArgumentType {
+    override fun parseArgumentValue(currentArgument: Iterator<String>, existing: Any?): List<String> {
         try {
             val latestValue = currentArgument.next()
             return buildList {

@@ -3,8 +3,8 @@ package compositionalcode
 import compositionalcode.ArgsException.ErrorCode.MISSING_STRING
 
 
-object StringArgumentMarshaler : ArgumentMarshaler {
-    override fun extract(currentArgument: Iterator<String>, existing: Any?): String {
+object StringArgumentType : ArgumentType {
+    override fun parseArgumentValue(currentArgument: Iterator<String>, existing: Any?): String {
         try {
             return currentArgument.next()
         } catch (e: NoSuchElementException) {

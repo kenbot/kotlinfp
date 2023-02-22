@@ -21,13 +21,13 @@ class Args(private val schema: Schema, args: Array<String>) {
         val argumentValuesSoFar: MutableMap<Char, Any> = mutableMapOf()
 
         fun parseArgumentCharacter(argChar: Char): Any {
-            val m: ArgumentMarshaler? = schema.argumentMap[argChar]?.createArgumentMarshaler()
-            if (m == null) {
+            val parser: ArgumentType? = schema.argumentMap[argChar]
+            if (parser == null) {
                 throw ArgsException(UNEXPECTED_ARGUMENT, argChar, null)
             } else {
                 try {
                     val existingValue: Any? = argumentValuesSoFar[argChar]
-                    return m.extract(currentArgument, existingValue)
+                    return parser.parseArgumentValue(currentArgument, existingValue)
                 } catch (e: ArgsException) {
                     e.errorArgumentId = argChar
                     throw e
@@ -56,31 +56,24 @@ class Args(private val schema: Schema, args: Array<String>) {
 
 
 
-    fun has(arg: Char): Boolean {
-        return argumentValues.containsKey(arg)
-    }
+    fun has(arg: Char): Boolean =
+        argumentValues.containsKey(arg)
 
-    fun nextArgument(): Int {
-        return nextArgument;
-    }
+    fun nextArgument(): Int =
+        nextArgument;
 
-    fun getBoolean(arg: Char): Boolean {
-        return BooleanArgumentMarshaler.cast(argumentValues[arg])
-    }
+    fun getBoolean(arg: Char): Boolean =
+        BooleanArgumentType.cast(argumentValues[arg])
 
-    fun getString(arg: Char): String? {
-        return StringArgumentMarshaler.cast(argumentValues[arg])
-    }
+    fun getString(arg: Char): String? =
+        StringArgumentType.cast(argumentValues[arg])
 
-    fun getInt(arg: Char): Int? {
-        return IntegerArgumentMarshaler.cast(argumentValues[arg])
-    }
+    fun getInt(arg: Char): Int? =
+        IntegerArgumentType.cast(argumentValues[arg])
 
-    fun getDouble(arg: Char): Double? {
-        return DoubleArgumentMarshaler.cast(argumentValues[arg])
-    }
+    fun getDouble(arg: Char): Double? =
+        DoubleArgumentType.cast(argumentValues[arg])
 
-    fun getStringArray(arg: Char): Array<String>? {
-        return StringArrayArgumentMarshaler.cast(argumentValues[arg])?.toTypedArray()
-    }
+    fun getStringArray(arg: Char): Array<String>? =
+        StringArrayArgumentType.cast(argumentValues[arg])?.toTypedArray()
 }

@@ -1,8 +1,8 @@
 package compositionalcode
 
 
-object BooleanArgumentMarshaler : ArgumentMarshaler {
-    override fun extract(currentArgument: Iterator<String>, existing: Any?): Boolean {
+object BooleanArgumentType : ArgumentType {
+    override fun parseArgumentValue(currentArgument: Iterator<String>, existing: Any?): Boolean {
         return true
     }
 
