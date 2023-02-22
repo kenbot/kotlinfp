@@ -2,11 +2,13 @@ package compositionalcode
 
 import compositionalcode.ArgsException.ErrorCode.*
 
+typealias ArgumentIndex = Int
+typealias ArgumentId = Char
 
 class Args(private val schema: Schema, args: Array<String>) {
 
-    private val argumentValues: Map<Char, Any>
-    private val nextArgument: Int
+    private val argumentValues: Map<ArgumentId, Any>
+    private val nextArgument: ArgumentIndex
 
     init {
         val (argumentValues, nextArgument) = parseArgumentStrings(listOf(*args))
@@ -16,11 +18,11 @@ class Args(private val schema: Schema, args: Array<String>) {
 
     constructor(schemaDsl: String, args: Array<String>): this(Schema.parseFromDsl(schemaDsl), args)
 
-    private fun parseArgumentStrings(argsList: List<String>): Pair<Map<Char, Any>, Int> {
+    private fun parseArgumentStrings(argsList: List<String>): Pair<Map<ArgumentId, Any>, ArgumentIndex> {
         val currentArgument: ListIterator<String> = argsList.listIterator()
-        val argumentValuesSoFar: MutableMap<Char, Any> = mutableMapOf()
+        val argumentValuesSoFar: MutableMap<ArgumentId, Any> = mutableMapOf()
 
-        fun parseArgumentCharacter(argChar: Char): Any {
+        fun parseArgumentCharacter(argChar: ArgumentId): Any {
             val parser: ArgumentType? = schema.argumentMap[argChar]
             if (parser == null) {
                 throw ArgsException(UNEXPECTED_ARGUMENT, argChar, null)
@@ -56,24 +58,24 @@ class Args(private val schema: Schema, args: Array<String>) {
 
 
 
-    fun has(arg: Char): Boolean =
+    fun has(arg: ArgumentId): Boolean =
         argumentValues.containsKey(arg)
 
     fun nextArgument(): Int =
         nextArgument;
 
-    fun getBoolean(arg: Char): Boolean =
+    fun getBoolean(arg: ArgumentId): Boolean =
         BooleanArgumentType.cast(argumentValues[arg])
 
-    fun getString(arg: Char): String? =
+    fun getString(arg: ArgumentId): String? =
         StringArgumentType.cast(argumentValues[arg])
 
-    fun getInt(arg: Char): Int? =
+    fun getInt(arg: ArgumentId): Int? =
         IntegerArgumentType.cast(argumentValues[arg])
 
-    fun getDouble(arg: Char): Double? =
+    fun getDouble(arg: ArgumentId): Double? =
         DoubleArgumentType.cast(argumentValues[arg])
 
-    fun getStringArray(arg: Char): Array<String>? =
+    fun getStringArray(arg: ArgumentId): Array<String>? =
         StringArrayArgumentType.cast(argumentValues[arg])?.toTypedArray()
 }

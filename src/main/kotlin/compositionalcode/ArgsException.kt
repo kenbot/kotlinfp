@@ -4,7 +4,7 @@ import compositionalcode.ArgsException.ErrorCode.*
 
 
 class ArgsException : Exception {
-    var errorArgumentId = '\u0000'
+    var errorArgumentId: ArgumentId = '\u0000'
     var errorParameter: String? = null
     var errorCode: ErrorCode = OK
 
