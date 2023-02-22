@@ -18,12 +18,14 @@ class Args(private val schema: Schema, args: Array<String>) {
 
     constructor(schemaDsl: String, args: Array<String>): this(Schema.parseFromDsl(schemaDsl), args)
 
+    @Throws(ArgsException::class)
     private fun parseArgumentStrings(argsList: List<String>): Pair<Map<ArgumentId, Any>, ArgumentIndex> {
         val currentArgument: ListIterator<String> = argsList.listIterator()
         val argumentValuesSoFar: MutableMap<ArgumentId, Any> = mutableMapOf()
 
+        @Throws(ArgsException::class)
         fun parseArgumentCharacter(argChar: ArgumentId): Any {
-            val parser: ArgumentType? = schema.argumentMap[argChar]
+            val parser: ArgumentType? = schema.getArgumentType(argChar)
             if (parser == null) {
                 throw ArgsException(UNEXPECTED_ARGUMENT, argChar, null)
             } else {
@@ -37,6 +39,7 @@ class Args(private val schema: Schema, args: Array<String>) {
             }
         }
 
+        @Throws(ArgsException::class)
         fun parseArgumentCharacters(argChars: String) {
             for (element in argChars) {
                 argumentValuesSoFar[element] = parseArgumentCharacter(element)

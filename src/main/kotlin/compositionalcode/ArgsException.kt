@@ -6,10 +6,8 @@ import compositionalcode.ArgsException.ErrorCode.*
 class ArgsException : Exception {
     var errorArgumentId: ArgumentId = '\u0000'
     var errorParameter: String? = null
-    var errorCode: ErrorCode = OK
+    val errorCode: ErrorCode
 
-    constructor()
-    constructor(message: String?) : super(message)
     constructor(errorCode: ErrorCode) {
         this.errorCode = errorCode
     }
@@ -27,30 +25,30 @@ class ArgsException : Exception {
 
     fun errorMessage(): String {
         return when (errorCode) {
-            OK -> "TILT: Should not get here."
-            UNEXPECTED_ARGUMENT -> String.format("Argument -%c unexpected.", errorArgumentId)
-            MISSING_STRING -> String.format("Could not find string parameter for -%c.", errorArgumentId)
-            INVALID_INTEGER -> String.format(
-                "Argument -%c expects an integer but was '%s'.",
-                errorArgumentId,
-                errorParameter
-            )
-
-            MISSING_INTEGER -> String.format("Could not find integer parameter for -%c.", errorArgumentId)
-            INVALID_DOUBLE -> String.format(
-                "Argument -%c expects a double but was '%s'.",
-                errorArgumentId,
-                errorParameter
-            )
-
-            MISSING_DOUBLE -> String.format("Could not find double parameter for -%c.", errorArgumentId)
-            INVALID_ARGUMENT_NAME -> String.format("'%c' is not a valid argument name.", errorArgumentId)
-            INVALID_ARGUMENT_FORMAT -> String.format("'%s' is not a valid argument format.", errorParameter)
+            INVALID_ARGUMENT_FORMAT -> "'$errorParameter' is not a valid argument format."
+            INVALID_ARGUMENT_NAME -> "'$errorArgumentId' is not a valid argument name."
+            UNEXPECTED_ARGUMENT -> "Argument -$errorArgumentId unexpected."
+            MISSING_STRING -> "Could not find string parameter for -$errorArgumentId."
+            INVALID_INTEGER -> "Argument -$errorArgumentId expects an integer but was '$errorParameter'."
+            MISSING_INTEGER -> "Could not find integer parameter for -$errorArgumentId."
+            INVALID_DOUBLE -> "Argument -${errorArgumentId} expects a double but was '$errorParameter'."
+            MISSING_DOUBLE -> "Could not find double parameter for -$errorArgumentId."
         }
     }
 
     enum class ErrorCode {
-        OK, INVALID_ARGUMENT_FORMAT, UNEXPECTED_ARGUMENT, INVALID_ARGUMENT_NAME,
-        MISSING_STRING, MISSING_INTEGER, INVALID_INTEGER, MISSING_DOUBLE, INVALID_DOUBLE
+        // Schema parser
+        INVALID_ARGUMENT_FORMAT, // Schema parser failed; unrecognised ArgumentType sigil. ArgumentId, parameter
+        INVALID_ARGUMENT_NAME, // Schema parser failed; invalid ArgumentId character. ArgumentId
+
+        // Argument parser
+        UNEXPECTED_ARGUMENT, // parseArgumentStrings failed; No ArgumentType registered for ArgumentId. ArgumentId
+
+        // Argument type parsers. All of these get re-thrown with ArgumentId added.
+        MISSING_STRING, // String[Array]ArgumentType failed; No arguments left to parse when expecting a string. No params
+        MISSING_INTEGER, // IntArgumentType failed; no arguments left to parse when expecting an integer. No params.
+        INVALID_INTEGER, // IntArgumentType failed; argument couldn't be parsed as an integer. parameter
+        MISSING_DOUBLE,  // DoubleArgumentType failed; no arguments left to parse when expecting a double. No params.
+        INVALID_DOUBLE  // DoubleArgumentType failed; argument couldn't be parsed as a double. parameter
     }
 }

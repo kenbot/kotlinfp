@@ -4,6 +4,7 @@ import compositionalcode.ArgsException.ErrorCode.*
 
 
 object StringArrayArgumentType : ArgumentType {
+    @Throws(ArgsException::class)
     override fun parseArgumentValue(currentArgument: Iterator<String>, existing: Any?): List<String> {
         try {
             val latestValue = currentArgument.next()

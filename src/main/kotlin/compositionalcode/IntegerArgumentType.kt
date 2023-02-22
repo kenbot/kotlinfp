@@ -4,6 +4,7 @@ import compositionalcode.ArgsException.ErrorCode.*
 
 
 object IntegerArgumentType : ArgumentType {
+    @Throws(ArgsException::class)
     override fun parseArgumentValue(currentArgument: Iterator<String>, existing: Any?): Int {
         var parameter: String? = null
         try {

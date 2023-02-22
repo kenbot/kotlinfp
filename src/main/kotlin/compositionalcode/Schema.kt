@@ -1,8 +1,12 @@
 package compositionalcode
 
-data class Schema(val argumentMap: Map<ArgumentId, ArgumentType>) {
+data class Schema(private val argumentMap: Map<ArgumentId, ArgumentType>) {
+
+    fun getArgumentType(argumentId: ArgumentId): ArgumentType? =
+        argumentMap[argumentId]
 
     companion object {
+        @Throws(ArgsException::class)
         fun parseFromDsl(schemaDsl: String): Schema {
             val elements = schemaDsl.split(",")
                 .filter { it.isNotEmpty() }
@@ -18,6 +22,7 @@ data class Schema(val argumentMap: Map<ArgumentId, ArgumentType>) {
             return Schema(argumentMap)
         }
 
+        @Throws(ArgsException::class)
         private fun parseSchemaElement(element: String): Pair<ArgumentId, ArgumentType> {
             val elementId = element[0]
             val elementTail = element.substring(1)
@@ -36,6 +41,7 @@ data class Schema(val argumentMap: Map<ArgumentId, ArgumentType>) {
             return Pair(elementId, argType)
         }
 
+        @Throws(ArgsException::class)
         private fun validateSchemaElementId(elementId: ArgumentId) {
             if (!Character.isLetter(elementId))
                 throw ArgsException(ArgsException.ErrorCode.INVALID_ARGUMENT_NAME, elementId, null)
