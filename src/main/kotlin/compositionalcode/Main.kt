@@ -7,10 +7,16 @@ fun main(args: Array<String>) {
         val port: Int = arg.getInt('p')!!
         val directory: String = arg.getString('d')!!
         val comments: Array<String> = arg.getStringArray('x')!!
+
         executeApplication(logging, port, directory, comments)
+        logApplicationArgs(arg)
     } catch (e: ArgsException) {
         println("Argument error: ${e.message}")
     }
+}
+
+fun logApplicationArgs(arg: Args) {
+    println("[INFO] $arg")
 }
 
 fun executeApplication(logging: Boolean, port: Int, directory: String, comments: Array<String>) {

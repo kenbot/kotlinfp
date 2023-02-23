@@ -56,7 +56,8 @@ class Args(private val schema: Schema, args: Array<String>) {
             }
         }
 
-        return Pair(buildMap { putAll(argumentValuesSoFar) }, currentArgument.nextIndex())
+        val immutableArgumentValues = buildMap { putAll(argumentValuesSoFar) }
+        return Pair(immutableArgumentValues, currentArgument.nextIndex())
     }
 
 
@@ -81,4 +82,7 @@ class Args(private val schema: Schema, args: Array<String>) {
 
     fun getStringArray(arg: ArgumentId): Array<String>? =
         StringArrayArgumentType.cast(argumentValues[arg])?.toTypedArray()
+
+    override fun toString(): String =
+        "Args $argumentValues"
 }

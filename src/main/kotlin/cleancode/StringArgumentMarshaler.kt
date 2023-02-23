@@ -6,7 +6,7 @@ import cleancode.ArgsException.ErrorCode.MISSING_STRING
 class StringArgumentMarshaler : ArgumentMarshaler {
     private var stringValue: String = ""
 
-    override fun set(currentArgument: Iterator<String>?) {
+    override fun set(currentArgument: MutableIterator<String>?) {
         stringValue = try {
             currentArgument!!.next()
         } catch (e: NoSuchElementException) {

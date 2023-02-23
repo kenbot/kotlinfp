@@ -8,7 +8,7 @@ import java.util.*
 class Args(schema: String, args: Array<String?>) {
     private val marshalers: MutableMap<Char, ArgumentMarshaler>
     private val argsFound: MutableSet<Char>
-    private var currentArgument: ListIterator<String>? = null
+    private var currentArgument: MutableListIterator<String>? = null
 
     init {
         marshalers = HashMap<Char, ArgumentMarshaler>()
@@ -47,6 +47,7 @@ class Args(schema: String, args: Array<String?>) {
 
     private fun parseArgumentStrings(argsList: MutableList<String>) {
         currentArgument = argsList.listIterator()
+
         while (currentArgument!!.hasNext()) {
             val argString = currentArgument!!.next()
             if (argString.startsWith("-")) {
@@ -105,4 +106,22 @@ class Args(schema: String, args: Array<String?>) {
     fun getStringArray(arg: Char): Array<String> {
         return StringArrayArgumentMarshaler.getValue(marshalers[arg])
     }
+
+    override fun toString(): String {
+        val argumentValues: Map<Char, Any> = buildMap {
+            argsFound.forEach {
+                when (marshalers[it]) {
+                    is BooleanArgumentMarshaler -> put(it, getBoolean(it))
+                    is IntegerArgumentMarshaler -> put(it, getInt(it))
+                    is DoubleArgumentMarshaler -> put(it, getInt(it))
+                    is StringArgumentMarshaler -> put(it, getString(it))
+                    is StringArrayArgumentMarshaler -> put(it, getStringArray(it).toList())
+                }
+            }
+        }
+
+        return "Args $argumentValues"
+    }
+
+
 }

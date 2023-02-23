@@ -6,7 +6,7 @@ import cleancode.ArgsException.ErrorCode.*
 class StringArrayArgumentMarshaler : ArgumentMarshaler {
     private val strings: MutableList<String> = ArrayList()
 
-    override fun set(currentArgument: Iterator<String>?) {
+    override fun set(currentArgument: MutableIterator<String>?) {
         try {
             strings.add(currentArgument!!.next())
         } catch (e: NoSuchElementException) {
