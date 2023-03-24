@@ -20,6 +20,7 @@ fun logApplicationArgs(arg: Args) {
 }
 
 fun executeApplication(logging: Boolean, port: Int, directory: String, comments: Array<String>) {
-    println("Executing compositionalcode application with logging=$logging, port=$port, directory=$directory comments=${comments.toList()}...")
+    println("Executing CompositionalCode application with logging=$logging, port=$port, directory=$directory comments=${comments.toList()}...")
 }
+
 

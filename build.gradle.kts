@@ -11,6 +11,7 @@ repositories {
 }
 
 dependencies {
+    implementation("io.arrow-kt:arrow-core:1.0.1")
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
